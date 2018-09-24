@@ -118,3 +118,29 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTHENTICATION_BACKENDS = [
+    'django_keycloak.auth.KeycloakBackend'
+]
+LOGIN_URL = 'login'
+# Keycloak settings
+KEYCLOAK_CLIENT_ID = 'django'
+KEYCLOAK_CLIENT_SECRET = '...'
+KEYCLOAK_AUTHORIZE_URL = 'http://localhost:9000/auth/realms/master/protocol/openid-connect/auth'
+KEYCLOAK_TOKEN_URL = 'http://localhost:9000/auth/realms/master/protocol/openid-connect/token'
+KEYCLOAK_USERINFO_URL = 'http://localhost:9000/auth/realms/master/protocol/openid-connect/userinfo'
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django_keycloak': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO'
+        },
+    },
+}
