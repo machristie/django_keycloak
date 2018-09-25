@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 
@@ -37,7 +38,6 @@ class KeycloakBackend(object):
         userinfo_url = settings.KEYCLOAK_USERINFO_URL
         state = request.session['OAUTH2_STATE']
         redirect_uri = request.session['OAUTH2_REDIRECT_URI']
-        logger.debug("state={}".format(state))
         oauth2_session = OAuth2Session(client_id,
                                        scope='openid email profile',
                                        redirect_uri=redirect_uri,
@@ -50,7 +50,12 @@ class KeycloakBackend(object):
 
     def _process_token(self, request, token):
         # TODO validate the JWS signature
-        logger.debug("token: {}".format(token))
+        logger.debug(
+            "token: {}".format(
+                json.dumps(
+                    token,
+                    indent=True,
+                    sort_keys=True)))
         now = time.time()
         # Put access_token into session to be used for authenticating with API
         # server
@@ -61,7 +66,12 @@ class KeycloakBackend(object):
         sess['REFRESH_TOKEN_EXPIRES_AT'] = now + token['refresh_expires_in']
 
     def _process_userinfo(self, request, userinfo):
-        logger.debug("userinfo: {}".format(userinfo))
+        logger.debug(
+            "userinfo: {}".format(
+                json.dumps(
+                    userinfo,
+                    indent=True,
+                    sort_keys=True)))
         username = userinfo['preferred_username']
         email = userinfo['email']
         first_name = userinfo['given_name']
