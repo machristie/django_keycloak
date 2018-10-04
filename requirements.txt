@@ -1,2 +1,2 @@
-Django==2.1.1
+Django~=2.1.2
 requests-oauthlib==0.7.0
